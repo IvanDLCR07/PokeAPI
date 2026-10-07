@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS Pokedex;
+USE Pokedex;
+
+CREATE TABLE Pokedex.pokemons (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    url VARCHAR(255),
+    type VARCHAR(255)
+);

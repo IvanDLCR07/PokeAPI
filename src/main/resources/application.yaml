@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: pokeApi
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/Pokedex}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
