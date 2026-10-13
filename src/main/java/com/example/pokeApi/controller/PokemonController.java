@@ -2,6 +2,7 @@ package com.example.pokeApi.controller;
 
 import com.example.pokeApi.persistance.model.Pokemon;
 import com.example.pokeApi.persistance.repository.PokemonRepository;
+import com.example.pokeApi.service.PokemonService;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PokemonController {
 
     private final PokemonRepository pokemonRepository;
+    private final PokemonService pokemonService;
 
-    public PokemonController(PokemonRepository pokemonRepository) {
+    public PokemonController(PokemonRepository pokemonRepository, PokemonService pokemonService) {
         this.pokemonRepository = pokemonRepository;
+        this.pokemonService = pokemonService;
     }
 
     @GetMapping
     public List<Pokemon> getAllPokemons() {
-        return pokemonRepository.findAll();
+        return pokemonService.getAllPokemons();
     }
 
     @GetMapping("/{id}")
@@ -71,4 +74,3 @@ public class PokemonController {
         return ResponseEntity.noContent().build();
     }
 }
-
