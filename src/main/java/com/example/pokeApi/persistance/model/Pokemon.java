@@ -7,14 +7,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "pokemons")
 public class Pokemon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column (name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -26,12 +29,4 @@ public class Pokemon {
     @Column(name = "type")
     private String type;
 
-    public Pokemon() {
-    }
-
-    public Pokemon(String name, String url, String type) {
-        this.name = name;
-        this.url = url;
-        this.type = type;
-    }
 }

@@ -20,4 +20,33 @@ public class PokemonServiceImpl implements PokemonService {
     public List<Pokemon> getAllPokemons() {
         return pokemonRepository.findAll();
     }
+
+    @Override
+    public Pokemon getPokemonById(Long id) {
+        return pokemonRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Pokemon createPokemon(Pokemon pokemon) {
+        pokemon.setId(null);
+        return pokemonRepository.save(pokemon);
+    }
+
+    @Override
+    public Pokemon updatePokemon(Long id, Pokemon pokemon) {
+        Pokemon existingPokemon = pokemonRepository.findById(id).orElse(null);
+        if (existingPokemon != null) {
+            existingPokemon.setName(pokemon.getName());
+            existingPokemon.setUrl(pokemon.getUrl());
+            existingPokemon.setType(pokemon.getType());
+            return pokemonRepository.save(existingPokemon);
+        }
+        return null;
+    }
+
+    @Override
+    public void deletePokemon(Long id) {
+        pokemonRepository.deleteById(id);
+    }
+
 }
