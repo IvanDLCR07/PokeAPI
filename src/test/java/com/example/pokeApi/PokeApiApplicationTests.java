@@ -33,21 +33,21 @@ class PokeApiApplicationTests {
 
     @Test
     void canCreateRetrieveAndDeletePokemon() throws Exception {
-        mockMvc.perform(post("/api/pokemons")
+        mockMvc.perform(post("/api/v2/pokemons")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"pikachu\",\"url\":\"https://pokeapi.co/api/v2/pokemon/25/\",\"type\":\"electric\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", org.hamcrest.Matchers.endsWith("/api/pokemons/1")));
+                .andExpect(header().string("Location", org.hamcrest.Matchers.endsWith("/api/v2/pokemons/1")));
 
-        mockMvc.perform(get("/api/pokemons/1"))
+        mockMvc.perform(get("/api/v2/pokemons/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("pikachu"))
                 .andExpect(jsonPath("$.type").value("electric"));
 
-        mockMvc.perform(delete("/api/pokemons/1"))
+        mockMvc.perform(delete("/api/v2/pokemons/1"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/pokemons/1"))
+        mockMvc.perform(get("/api/v2/pokemons/1"))
                 .andExpect(status().isNotFound());
     }
 }
