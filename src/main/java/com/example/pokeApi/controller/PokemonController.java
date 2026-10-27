@@ -1,14 +1,17 @@
 package com.example.pokeApi.controller;
 
+import com.example.pokeApi.controller.converter.Converter;
+import com.example.pokeApi.controller.dto.PokemonDto;
 import com.example.pokeApi.persistance.model.Pokemon;
 import com.example.pokeApi.service.PokemonService;
 
-import lombok.AllArgsConstructor;
-
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,31 +23,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/pokemons")
+@RequestMapping("/api/v2/pokemons")
 @CrossOrigin
-@AllArgsConstructor 
 public class PokemonController {
 
-    PokemonService pokemonService;
+    private final PokemonService pokemonService;
+    private final Converter converter;
+
+    public PokemonController(PokemonService pokemonService, Converter converter) {
+        this.pokemonService = pokemonService;
+        this.converter = converter;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Pokemon>> getAllPokemons() {
-        return ResponseEntity.status(HttpStatus.OK).body(pokemonService.getAllPokemons());
+    public ResponseEntity<List<PokemonDto>> getAllPokemons() {
+        return ResponseEntity.status(HttpStatus.OK).body(pokemonService.getAllPokemons().stream().map(converter::convertToDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pokemon> getPokemonById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(pokemonService.getPokemonById(id));
-        }
+    public ResponseEntity<PokemonDto> getPokemonById(@PathVariable Long id) {
+        Pokemon conPokemon = pokemonService.getPokemonById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(converter.convertToDto(conPokemon));
+    }
 
     @PostMapping
-    public ResponseEntity<Pokemon> createPokemon(@RequestBody Pokemon pokemon) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(pokemonService.createPokemon(pokemon));
+    public ResponseEntity<PokemonDto> createPokemon(@RequestBody PokemonDto pokemonDto) {
+        Pokemon createdPokemon = pokemonService.createPokemon(converter.convertToEntity(pokemonDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.convertToDto(createdPokemon));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pokemon> updatePokemon(@PathVariable Long id, @RequestBody Pokemon pokemon) {
-        return ResponseEntity.status(HttpStatus.OK).body(pokemonService.updatePokemon(id, pokemon));
+    public ResponseEntity<PokemonDto> updatePokemon(@PathVariable Long id, @RequestBody PokemonDto pokemonDto) {
+        Pokemon updatedPokemon = pokemonService.updatePokemon(id, converter.convertToEntity(pokemonDto));
+        return ResponseEntity.status(HttpStatus.OK).body(converter.convertToDto(updatedPokemon));
     }
 
     @DeleteMapping("/{id}")
