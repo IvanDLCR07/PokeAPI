@@ -18,7 +18,6 @@ public class Converter {
 
     public Pokemon convertToEntity(PokemonDto pokemonDto){
         Pokemon pokemon = new Pokemon();
-        pokemon.setId(pokemonDto.getId());
         pokemon.setName(pokemonDto.getName());
         pokemon.setType(pokemonDto.getType());
         return pokemon;
